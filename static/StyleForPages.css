@@ -806,6 +806,116 @@ strong { font-weight: 600; }
 
 
 /* ============================================================
+   CONTACT PAGE — two-column layout + form fields
+============================================================ */
+.contact-page {
+    padding-top: calc(var(--nav-h) + 5rem);
+}
+
+.contact-page-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+}
+
+.contact-page-intro {
+    font-size: 1.05rem;
+    color: var(--txt-muted);
+    line-height: 1.8;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.contact-page-socials {
+    justify-content: flex-start;
+}
+
+/* Form */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--txt-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.form-input,
+.form-textarea {
+    font-family: var(--font);
+    font-size: 0.95rem;
+    color: var(--txt);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1rem;
+    width: 100%;
+    outline: none;
+    transition: border-color var(--t), box-shadow var(--t);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: var(--txt-sub);
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    border-color: var(--accent-border);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.08);
+}
+
+.form-textarea {
+    min-height: 160px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+/* Flash message (shown after form submission) */
+.form-flash {
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.92rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.form-flash--success {
+    background: rgba(34, 197, 94, 0.10);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    color: #86efac;
+}
+
+/* Responsive — tablet */
+@media (max-width: 1024px) {
+    .contact-page-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+}
+
+/* Responsive — mobile */
+@media (max-width: 640px) {
+    .contact-page {
+        padding-top: calc(var(--nav-h) + 3rem);
+    }
+}
+
+
+/* ============================================================
    FOOTER
 ============================================================ */
 .footer {

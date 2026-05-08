@@ -1,0 +1,22 @@
+# fly.toml — Fly.io deployment configuration
+# Deploy with: fly launch (first time) or fly deploy (subsequent)
+# Change "app" to a unique name before running fly launch.
+
+app            = "rashed-portfolio"
+primary_region = "dxb"          # Dubai — change to the region nearest your users
+                                 # Full list: fly platform regions
+
+[build]
+  # Fly.io uses the Dockerfile automatically when this section is present.
+
+[http_service]
+  internal_port       = 8080    # must match the port in main.go
+  force_https         = true
+  auto_stop_machines  = true    # machine sleeps when idle (saves free-tier hours)
+  auto_start_machines = true    # wakes on first request
+  min_machines_running = 0      # set to 1 if you want zero cold starts (costs more)
+
+[[vm]]
+  memory   = "256mb"
+  cpu_kind = "shared"
+  cpus     = 1

@@ -53,7 +53,7 @@
             </ul>
         </nav>
 
-        <!-- {{.Contact.Email}} — injected from Go struct -->
+        <!-- .Contact.Email — injected from Go struct -->
         <a href="mailto:{{.Contact.Email}}" class="btn btn--outline btn--sm">Hire Me</a>
 
     </div>
@@ -63,9 +63,9 @@
 <!-- ============================================================
      HERO
      Go fields used:
-       {{.Hero.Name}}    — your full name
-       {{.Hero.Tagline}} — one sentence about what you do
-       {{.Hero.Roles}}   — []string, cycled by the typewriter in script.js
+       .Hero.Name    — your full name
+       .Hero.Tagline — one sentence about what you do
+       .Hero.Roles   — []string, cycled by the typewriter in script.js
 ============================================================ -->
 <section class="hero" id="hero" aria-label="Introduction">
 
@@ -106,12 +106,12 @@
 
     <!-- ── PASS ROLES FROM GO TO JAVASCRIPT ──────────────────────
          html/template is context-aware: inside a <script> block,
-         {{$r}} is automatically JavaScript-escaped (not HTML-escaped).
+         Values are automatically JavaScript-escaped (not HTML-escaped).
          The range loop produces: ["Role A", "Role B", "Role C"]
          script.js reads window.ROLES on startup.
     ─────────────────────────────────────────────────────────── -->
     <script>
-        window.ROLES = [{{range $i, $r := .Hero.Roles}}{{if $i}}, {{end}}"{{$r}}"{{end}}];
+        window.ROLES = {{.Hero.Roles | json}};
     </script>
 
 </section>
@@ -120,8 +120,8 @@
 <!-- ============================================================
      ABOUT
      Go fields used:
-       {{.About.Bio}}         — paragraph string
-       {{range .About.Stats}} — []Stat{Value, Label}
+       .About.Bio   — paragraph string
+       .About.Stats — []Stat{Value, Label}
 ============================================================ -->
 <section class="section" id="about">
     <div class="container">
@@ -159,9 +159,9 @@
 <!-- ============================================================
      SKILLS
      Go fields used:
-       {{range .Skills.Languages}}  — []string
-       {{range .Skills.Frameworks}} — []string
-       {{range .Skills.Tools}}      — []string
+       .Skills.Languages  — []string
+       .Skills.Frameworks — []string
+       .Skills.Tools      — []string
 ============================================================ -->
 <section class="section section--surface" id="skills">
     <div class="container">
@@ -203,8 +203,8 @@
 <!-- ============================================================
      PROJECTS
      Go fields used:
-       {{.FeaturedProject}}  — single Project struct
-       {{range .Projects}}   — []Project (the non-featured ones)
+       .FeaturedProject — single Project struct
+       .Projects        — []Project (the non-featured ones)
 ============================================================ -->
 <section class="section" id="projects">
     <div class="container">
@@ -305,9 +305,9 @@
 <!-- ============================================================
      CONTACT
      Go fields used:
-       {{.Contact.Email}}    — mailto: link
-       {{.Contact.GitHub}}   — profile URL (empty string = hidden)
-       {{.Contact.LinkedIn}} — profile URL (empty string = hidden)
+       .Contact.Email    — mailto: link
+       .Contact.GitHub   — profile URL (empty string = hidden)
+       .Contact.LinkedIn — profile URL (empty string = hidden)
 ============================================================ -->
 <section class="section section--surface" id="contact">
     <div class="container">

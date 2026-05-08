@@ -1,0 +1,214 @@
+{{/*
+==============================================================
+  GO TEMPLATE — what data your server must pass
+==============================================================
+
+  In main.go, pass a ContactPage struct to this template:
+
+    type ContactPage struct {
+        Meta    Meta    // page title, description, author
+        Contact Contact // email for "Hire Me", social links
+        Flash   string  // "sent" = show thank-you; "" = show form
+    }
+
+  Handler pattern:
+
+    http.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
+        if r.Method == http.MethodPost {
+            name    := r.FormValue("name")
+            email   := r.FormValue("email")
+            message := r.FormValue("message")
+            log.Printf("contact: from=%s <%s>: %s", name, email, message)
+            http.Redirect(w, r, "/contact?sent=1", http.StatusSeeOther)
+            return
+        }
+        flash := ""
+        if r.URL.Query().Get("sent") == "1" {
+            flash = "sent"
+        }
+        data := ContactPage{ Meta: ..., Contact: ..., Flash: flash }
+        contactTmpl.Execute(w, data)
+    })
+
+  Template variables used:
+    {{.Meta.Title}}       → browser tab title
+    {{.Meta.Description}} → <meta name="description">
+    {{.Meta.Author}}      → footer credit
+    {{.Contact.Email}}    → "Hire Me" mailto: link
+    {{.Contact.GitHub}}   → social link (hidden when empty)
+    {{.Contact.LinkedIn}} → social link (hidden when empty)
+    {{.Flash}}            → "sent" shows thank-you; anything else shows form
+==============================================================
+*/}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{.Meta.Description}}">
+    <meta name="author"      content="{{.Meta.Author}}">
+    <title>{{.Meta.Title}}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/static/StyleForPages.css">
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+     Logo links back to / (home page), not #hero.
+     Contact link gets is-active so the underline appears.
+============================================================ -->
+<header class="nav" id="nav">
+    <div class="container nav__inner">
+
+        <a href="/" class="nav__logo">
+            <span class="nav__bracket">&lt;</span>RA<span class="nav__bracket">/&gt;</span>
+        </a>
+
+        <nav aria-label="Primary">
+            <ul class="nav__links">
+                <li><a href="/#about"    class="nav__link">About</a></li>
+                <li><a href="/#skills"   class="nav__link">Skills</a></li>
+                <li><a href="/#projects" class="nav__link">Projects</a></li>
+                <li><a href="/contact"   class="nav__link is-active">Contact</a></li>
+            </ul>
+        </nav>
+
+        <a href="mailto:{{.Contact.Email}}" class="btn btn--outline btn--sm">Hire Me</a>
+
+    </div>
+</header>
+
+
+<!-- ============================================================
+     CONTACT PAGE BODY
+     Two states controlled by .Flash:
+       "sent" → thank-you message
+       ""     → form
+============================================================ -->
+<main>
+<section class="section section--surface contact-page" id="contact">
+    <div class="container">
+
+        <header class="section-head reveal">
+            <span class="section-num">01</span>
+            <h2 class="section-title">Get In Touch</h2>
+            <span class="section-rule" aria-hidden="true"></span>
+        </header>
+
+        {{if eq .Flash "sent"}}
+
+        <!-- ── THANK-YOU STATE ────────────────────────────────────
+             Shown after a successful POST + redirect to ?sent=1.
+             The if block below is true only when the server sets
+             Flash = "sent" — never from user input directly.
+        ─────────────────────────────────────────────────────── -->
+        <div class="contact-body reveal">
+            <div class="form-flash form-flash--success" role="status">
+                Message received — I will get back to you as soon as possible.
+            </div>
+            <a href="/" class="btn btn--ghost">Back to Home</a>
+        </div>
+
+        {{else}}
+
+        <!-- ── FORM STATE ─────────────────────────────────────────
+             The form POSTs to /contact. The server reads the fields
+             with r.FormValue("name"), r.FormValue("email"), etc.,
+             then redirects to /contact?sent=1 on success.
+        ─────────────────────────────────────────────────────── -->
+        <div class="contact-page-grid reveal">
+
+            <div class="contact-page-intro">
+                <p>I am open to new opportunities — full-time roles, freelance projects, or just an interesting conversation.</p>
+                <p>Fill out the form and I will get back to you.</p>
+
+                <div class="contact-socials contact-page-socials">
+
+                    {{if .Contact.GitHub}}
+                    <a href="{{.Contact.GitHub}}" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                        GitHub
+                    </a>
+                    {{end}}
+
+                    {{if .Contact.LinkedIn}}
+                    <a href="{{.Contact.LinkedIn}}" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        LinkedIn
+                    </a>
+                    {{end}}
+
+                </div>
+            </div>
+
+            <!-- The form action="/contact" method="POST" sends to your Go handler.
+                 r.FormValue("name"), r.FormValue("email"), r.FormValue("message")
+                 reads these fields on the server side. -->
+            <form class="contact-form" action="/contact" method="POST" novalidate>
+
+                <div class="form-group">
+                    <label class="form-label" for="name">Name</label>
+                    <input  class="form-input"
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Your name"
+                            required
+                            autocomplete="name">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input  class="form-input"
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="you@example.com"
+                            required
+                            autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="message">Message</label>
+                    <textarea class="form-textarea"
+                              id="message"
+                              name="message"
+                              placeholder="What would you like to talk about?"
+                              required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn--primary">Send Message</button>
+
+            </form>
+
+        </div>
+        {{end}}
+
+    </div>
+</section>
+</main>
+
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container footer__inner">
+        <p>Designed and built by <strong>{{.Meta.Author}}</strong></p>
+        <p class="footer__stack">
+            Powered by
+            <span class="footer__tech">Go</span>
+            <span class="footer__sep">+</span>
+            <span class="footer__tech">html/template</span>
+        </p>
+    </div>
+</footer>
+
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>

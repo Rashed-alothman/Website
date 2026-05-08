@@ -11,7 +11,8 @@ mywebsite/
 ├── main.go                   ← You write this. The entire server lives here.
 ├── go.mod                    ← Module name + Go version. Already created.
 ├── templates/
-│   └── MainPage.html         ← The portfolio page. Uses Go template syntax.
+│   ├── MainPage.html         ← The portfolio page. Uses Go template syntax.
+│   └── ContactPage.html      ← The /contact form page. Uses Go template syntax.
 └── static/
     ├── StyleForPages.css     ← All CSS. Zero frameworks, handwritten.
     └── script.js             ← Typewriter, scroll reveal, nav behavior.
@@ -36,6 +37,13 @@ A standard HTML file extended with Go's template syntax `{{.Field}}`.
 Your server reads this file, fills in the data from your Go structs, and
 sends the resulting HTML to the browser. The browser never sees the
 `{{ }}` markers — they are resolved on the server.
+
+### `templates/ContactPage.html`
+The standalone contact form page at `/contact`. Accepts a `ContactPage`
+struct (see below). On GET it renders the form; on POST the handler
+processes the fields and redirects to `/contact?sent=1`, which causes the
+server to set `Flash = "sent"` so the template shows the thank-you message
+instead of the form.
 
 ### `static/StyleForPages.css`
 All visual styles. Go serves this as a static file — the browser
@@ -116,6 +124,14 @@ type Contact struct {
     Email    string // used for the mailto: link
     GitHub   string // full URL — empty = hidden
     LinkedIn string // full URL — empty = hidden
+}
+
+// ContactPage is the data passed to templates/ContactPage.html.
+// It is separate from Portfolio because /contact is its own route.
+type ContactPage struct {
+    Meta    Meta    // browser tab title, description, author
+    Contact Contact // email for "Hire Me" button, social links
+    Flash   string  // "sent" = show thank-you message; "" = show form
 }
 
 // --- Server -------------------------------------------------------
@@ -219,11 +235,16 @@ func main() {
 This is the most important thing to understand.
 
 ```
-Go struct field            Template variable
-──────────────────         ─────────────────
-data.Hero.Name        →    {{.Hero.Name}}
-data.About.Stats      →    {{range .About.Stats}} ... {{end}}
-data.Contact.GitHub   →    {{if .Contact.GitHub}} ... {{end}}
+Go struct field              Template variable
+────────────────────         ──────────────────────────────────
+data.Hero.Name          →    {{.Hero.Name}}
+data.About.Stats        →    {{range .About.Stats}} ... {{end}}
+data.Contact.GitHub     →    {{if .Contact.GitHub}} ... {{end}}
+
+-- ContactPage (templates/ContactPage.html) --
+data.Meta.Title         →    {{.Meta.Title}}
+data.Contact.Email      →    {{.Contact.Email}}
+data.Flash              →    {{if eq .Flash "sent"}} ... {{end}}
 ```
 
 When you call `tmpl.Execute(w, data)`, Go's template engine walks
@@ -289,18 +310,61 @@ To stop the server: `Ctrl+C`
    })
    ```
 
-## How to Add a Contact Form (POST handler)
+## The /contact Route (GET + POST)
+
+Parse the template once at startup, alongside `MainPage.html`:
+
+```go
+mainTmpl    := template.Must(template.ParseFiles("templates/MainPage.html"))
+contactTmpl := template.Must(template.ParseFiles("templates/ContactPage.html"))
+```
+
+Then register the route:
 
 ```go
 http.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
+
+    // POST — process the submitted form, then redirect (PRG pattern).
+    // The redirect prevents the browser from re-submitting on refresh.
     if r.Method == http.MethodPost {
         name    := r.FormValue("name")
         email   := r.FormValue("email")
         message := r.FormValue("message")
-        // do something: log it, email it, save to DB
-        http.Redirect(w, r, "/#contact", http.StatusSeeOther)
+        log.Printf("contact: from=%s <%s>: %s", name, email, message)
+        http.Redirect(w, r, "/contact?sent=1", http.StatusSeeOther)
         return
     }
-    http.NotFound(w, r)
+
+    // GET — render the form.
+    // If ?sent=1 is present, set Flash = "sent" so the template
+    // shows the thank-you message instead of the form.
+    flash := ""
+    if r.URL.Query().Get("sent") == "1" {
+        flash = "sent"
+    }
+
+    data := ContactPage{
+        Meta: Meta{
+            Title:       "Contact — Rashed Alothman",
+            Description: "Get in touch with Rashed Alothman.",
+            Author:      "Rashed Alothman",
+        },
+        Contact: Contact{
+            Email:    "rashed.m.alothman@gmail.com",
+            GitHub:   "https://github.com/Rashed-alothman",
+            LinkedIn: "#",
+        },
+        Flash: flash,
+    }
+
+    w.Header().Set("Content-Type", "text/html; charset=utf-8")
+    if err := contactTmpl.Execute(w, data); err != nil {
+        log.Printf("contact template error: %v", err)
+        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+    }
 })
 ```
+
+**PRG = Post / Redirect / Get.** The server processes the POST, then
+redirects the browser to GET `/contact?sent=1`. This means pressing F5
+does not re-submit the form — it just re-fetches the thank-you page.
