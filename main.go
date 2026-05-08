@@ -306,7 +306,7 @@ func buildPortfolioData() Portfolio {
 		Contact: Contact{
 			Email:    "rashed.m.alothman@gmail.com",
 			GitHub:   "https://github.com/Rashed-alothman",
-			LinkedIn: "linkedin.com/in/rashed-alothman-09386a24a",
+			LinkedIn: "https://linkedin.com/in/rashed-alothman-09386a24a",
 		},
 	}
 }
