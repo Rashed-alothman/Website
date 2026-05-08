@@ -1,22 +1,22 @@
-# fly.toml — Fly.io deployment configuration
-# Deploy with: fly launch (first time) or fly deploy (subsequent)
-# Change "app" to a unique name before running fly launch.
+# fly.toml app configuration file generated for website-mje53a on 2026-05-08T17:17:02Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
-app            = "rashed-portfolio"
-primary_region = "dxb"          # Dubai — change to the region nearest your users
-                                 # Full list: fly platform regions
+app = 'website-mje53a'
+primary_region = 'ams'
 
 [build]
-  # Fly.io uses the Dockerfile automatically when this section is present.
 
 [http_service]
-  internal_port       = 8080    # must match the port in main.go
-  force_https         = true
-  auto_stop_machines  = true    # machine sleeps when idle (saves free-tier hours)
-  auto_start_machines = true    # wakes on first request
-  min_machines_running = 0      # set to 1 if you want zero cold starts (costs more)
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
 
 [[vm]]
-  memory   = "256mb"
-  cpu_kind = "shared"
-  cpus     = 1
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 256
