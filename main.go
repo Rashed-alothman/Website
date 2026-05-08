@@ -276,20 +276,20 @@ func buildPortfolioData() Portfolio {
 			{
 				Title:       "Student Performance Prediction",
 				Description: "A machine learning-based educational technology system that predicts student academic outcomes through three specialized models: final exam mark prediction, dropout risk assessment, and pass/fail forecasting. Built with Python, Flask, and scikit-learn to help educational institutions identify at-risk students and implement timely interventions.",
-				Tags:        []string{"Python", "flask", "sklearn"},
+				Tags:        []string{"Python", "flask", "sklearn", "pandas/numpy", "SHAP", "Matplotlib/Seaborn", "joblib", "pickle", "HTML/CSS"},
 				GitHub:      "https://github.com/Rashed-alothman/Student-Performance-Prediction",
 			},
 			{
 				Title:       "TMS",
 				Description: "Task Management System A flexible, lightweight task management system built with Python and Flask. Designed for personal productivity with a vision for collaborative team environments and seamless calendar integration.",
 				Tags:        []string{"Python", "PostgreSQL", "Docker"},
-				GitHub:      "#",
+				GitHub:      "https://github.com/Rashed-alothman/TMS",
 			},
 			{
 				Title:       "Snatch",
 				Description: "A powerful terminal-based Python downloader for YouTube, Twitter, TikTok & more with high-quality video/audio extraction capabilities.",
-				Tags:        []string{"Python", "Json", "CLI"},
-				GitHub:      "https://github.com/Rashed-alothman/Shell-in-go",
+				Tags:        []string{"Python", "Json", "CLI", "yt-dlp", "ffmpeg"},
+				GitHub:      "https://github.com/Rashed-alothman/Snatch",
 			},
 			{
 				Title:       "Shell in go",
@@ -299,9 +299,9 @@ func buildPortfolioData() Portfolio {
 			},
 		},
 		Skills: Skills{
-			Languages:  []string{"Go", "Python", "C++", "SQL", "Bash"},
-			Frameworks: []string{"net/http", "Chi", "Gin", "GORM", "React", "flask", "Django", "sklearn"},
-			Tools:      []string{"Docker", "PostgreSQL", "Redis", "Git", "Linux"},
+			Languages:  []string{"Go", "Python", "C++", "SQL", "Bash", "MySQL", "vb.net", "HTML/CSS", "JavaScript"},
+			Frameworks: []string{"net/http", "Chi", "Gin", "GORM", "React", "flask", "Django", "sklearn", "pandas/numpy", "Matplotlib/Seaborn"},
+			Tools:      []string{"Docker", "PostgreSQL", "Redis", "Git", "Linux", "VS Code", "vim", "ffmpeg"},
 		},
 		Contact: Contact{
 			Email:    "rashed.m.alothman@gmail.com",
