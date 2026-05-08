@@ -34,3 +34,21 @@ fly.secrets
 # OS
 .DS_Store
 Thumbs.db
+# claude
+CLAUDE.md
+
+# Other
+node_modules/
+dist/
+build/
+
+# Ignore all .log files in the logs directory, but keep the directory itself
+logs/*.log 
+main_test.go
+
+#temporary files
+*.tmp
+
+# md files
+Structure.md
+Tips.md
