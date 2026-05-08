@@ -1,0 +1,36 @@
+# Binary
+portfolio
+Website.exe
+
+# Go build cache
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Go coverage output
+*.out
+coverage.html
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Fly.io secrets
+fly.secrets
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
